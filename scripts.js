@@ -15,7 +15,7 @@ async function fetchData(){
     try{
         document.getElementById("body").hidden=false;
         const search=document.getElementById("search").value.toLowerCase();
-        const response=await fetch(`https://pokeapi.co/api/v2/pokemon/${search}`);
+        const response=await fetch(`https://pokeapi.co/api/v2/pokemon/${search}`,{mode:"cors"});
         if(!response.ok){
             throw new Error("Pokemon not found!!");
         }
@@ -52,7 +52,7 @@ async function fetchData(){
 
         async function pokeDexEntry(){
             try{
-                const response2=await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}/`);
+                const response2=await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}/`,{mode:"cors"});
                 const fact=await response2.json();
                 document.getElementById("fact").textContent=fact.flavor_text_entries[0].flavor_text;
             }

@@ -1,0 +1,190 @@
+body{
+    background-image: radial-gradient(black,white);
+}
+.poke{
+    background-color: rgb(175, 239, 239);
+    border: solid black 4px;
+    position: fixed;
+    left:300px;
+    width:1000px;
+    height:700px;
+}
+#source{
+    
+    position:fixed;
+    bottom:0px;
+    right:5px;
+}
+.user{
+    position: fixed;
+    left:10px;
+    top:50px;
+}
+#search{
+    width:270px;
+    font-size: 20px;
+}
+#button{
+    background-color: green;
+    color:rgb(255, 255, 255);
+    border-radius: 10px;
+    border: double black 1px;
+    font-size:25px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    position:fixed;
+    top:100px;
+    left:80px;
+}
+#name{
+    background-image:radial-gradient(white,rgb(135, 133, 133));
+    text-shadow: 2px 2px 2px black;
+    width:500px;
+    padding-left: 200px;
+    font-size: 60px;
+    position: fixed;
+    top:20px;
+    left:450px;
+}
+
+#id{
+    border:solid black 2px;
+    padding-left: 2px;
+    width: 150px;
+    position: relative;
+    top:36px;
+    left:680px;
+    font-size: 30px;
+}
+
+#sprite{
+    transform: scale(2.2);
+    position: fixed;
+    top:220px;
+    left: 650px;
+}
+
+#type1{
+    font-size: 30px;
+    position: fixed;
+    left:900px;
+    top:200px;
+    border-radius: 25px;
+    width:150px;
+    height:50px;
+}
+#type2{
+    font-size: 30px;
+    position: fixed;
+    left:1070px;
+    top:199.8px;
+    width:150px;
+    border-radius: 25px;
+    height:50px;
+}
+
+#fact{
+    background-image: radial-gradient(white,lime);
+    border:ridge black 5px;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    font-size: 30px;
+    width:990px;
+    height:115px;
+    position: fixed;
+    left:300px;
+    top:540px;
+}
+
+.ability{
+    background-image:radial-gradient(pink, purple);
+    color:white;
+    text-shadow: 5px 5px 5px black;
+    border:ridge black 5px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    width:990px;
+    height: 150px;
+    font-size: 30px;
+    position: fixed;
+    left:300px;
+    top:400px;
+}
+
+
+.dragon{
+    background-image: linear-gradient(red,blue);
+    color:rgb(235, 235, 235);
+}
+.bug{
+    background-color: rgb(10, 82, 10);
+    color:yellow;
+}
+.grass{
+    background-color: limegreen;
+    color:yellow;
+}
+.fire{
+    background-color: red;
+    color:orange;
+}
+.water{
+    background-color: cyan;
+    color:black;
+}
+.fairy{
+    background-color:pink;
+    color:rgb(80, 0, 80);
+}
+.steel{
+    background-color: slategrey;
+    color:black;
+}
+.ice{
+    background-color: rgb(174, 234, 232);
+    color:rgb(69, 69, 69);
+}
+.psychic{
+    background-image: radial-gradient(pink,purple);
+    color:rgb(166, 45, 87);
+}
+.dark{
+    background-color: black;
+    color:rgb(104, 104, 104)
+}
+.ghost{
+    background-color: rgb(50, 0, 50);
+    color:rgb(88, 106, 204);
+}
+.normal{
+    background-color: rgb(174, 174, 174);
+    color:grey;
+}
+.fighting{
+    background-color: brown;
+    color:rgb(180, 180, 0);
+}
+.flying{
+    background-image: linear-gradient(cyan,green);
+    color:rgb(48, 50, 76);
+}
+.electric{
+    background-color: yellow;
+    color:black;
+}
+.poison{
+    background-color: purple;
+    color:rgb(6, 255, 6);
+}
+.rock{
+    background-color: burlywood;
+    color:rgb(78, 5, 5);
+}
+.ground{
+    background-color:darkgoldenrod;
+    color:rgb(249, 234, 216);
+}

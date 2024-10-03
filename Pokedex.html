@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+    <link rel="stylesheet" href="Pokedex.css">
+</head>
+<body>
+    <div class="user">
+        <input type="text" id="search" placeholder="Enter the Pokemon name or id">
+        <button type="submit" id="button" onclick="fetchData()">Search</button>
+    </div>
+    <div id="body">
+        <h3 id="source">Source:https://pokeapi.co/</h3>
+        <div class="poke">
+            <h1 id="name"></h1>
+            <h3 id="id"></h3>
+            <div class="type">
+                <button id="type1"></button>
+                <button id="type2"></button>
+            </div>
+            <h4 id="fact"></h4>
+            <div class="ability">
+                <h3 id="ability"></h3>
+                <h3 id="abilityHidden"></h3>
+            </div>
+            <img src="" id="sprite">
+        </div>
+    </div>
+    <script src="Pokedex.js"></script>
+</body>
+</html>

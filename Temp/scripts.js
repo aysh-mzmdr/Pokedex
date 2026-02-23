@@ -1,4 +1,5 @@
 const button=document.getElementById("button")
+document.getElementById("body").hidden=true;
 
 function firstCharFixer(text){
     const firstChar=text.charAt(0).toUpperCase();
@@ -8,9 +9,7 @@ function firstCharFixer(text){
         }
     return name;
 }
-document.getElementById("body").hidden=true;
-document.getElementById("search").style.boxShadow="5px 5px 5px black"
-button.style.boxShadow="2px 2px 2px black"
+
 async function fetchData(){
     try{
         document.getElementById("body").hidden=false;

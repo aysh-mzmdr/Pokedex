@@ -1,2 +1,1 @@
-https://pokeapi.co/
-https://pokeapi.co/api/v2/
+Live Link: https://aysh-mzmdr.github.io/Pokedex/

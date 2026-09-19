@@ -1049,6 +1049,79 @@ body {
   border-radius: 0 0 4px 0;
 }
 
+.dex-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cry-btn {
+  position: relative;
+  top: 2px; /* optical centring on the capitals of the name */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(120, 255, 200, 0.45);
+  background: rgba(120, 255, 200, 0.1);
+  color: rgba(160, 255, 215, 0.95);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(120, 255, 200, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(6px);
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.cry-btn:hover:not(:disabled) {
+  background: rgba(120, 255, 200, 0.22);
+  box-shadow: 0 0 16px rgba(120, 255, 200, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: scale(1.08);
+}
+
+.cry-btn:active:not(:disabled) {
+  transform: scale(0.93);
+}
+
+.cry-btn:focus-visible {
+  outline: 2px solid rgba(111, 224, 255, 0.8);
+  outline-offset: 2px;
+}
+
+.cry-btn:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.cry-wave {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.cry-playing {
+  box-shadow: 0 0 20px rgba(120, 255, 200, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.cry-playing .cry-wave {
+  animation: cryWave 0.7s ease-in-out infinite;
+}
+
+.cry-playing .cry-wave-2 {
+  animation-delay: 0.2s;
+}
+
+@keyframes cryWave {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 .dex-id-row {
   display: flex;
   align-items: baseline;
@@ -1307,23 +1380,60 @@ body {
   color: rgba(242, 244, 255, 0.8);
 }
 
-.rescan-btn {
-  align-self: flex-start;
+.dex-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   margin-top: 4px;
-  padding: 10px 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.1);
-  color: #f2f4ff;
-  font-size: 0.9rem;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.rescan-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+.rescan-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 210, 60, 0.5);
+  background: linear-gradient(135deg, rgba(255, 203, 5, 0.32), rgba(255, 138, 0, 0.22));
+  color: #fff4c9;
+  font-family: 'Consolas', 'SFMono-Regular', monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.rescan-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255, 203, 5, 0.45), rgba(255, 138, 0, 0.32));
+  border-color: rgba(255, 224, 110, 0.75);
+  box-shadow: 0 0 12px rgba(255, 190, 0, 0.3);
   transform: translateY(-1px);
+}
+
+.rescan-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* Primary action: frosted blue glass, like the type badges. */
+.next-btn {
+  min-width: 104px;
+  border-color: rgba(120, 200, 255, 0.5);
+  background: linear-gradient(135deg, rgba(87, 194, 245, 0.4), rgba(20, 98, 212, 0.3));
+  color: #e4f5ff;
+}
+
+.rescan-btn.next-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(87, 194, 245, 0.55), rgba(20, 98, 212, 0.42));
+  border-color: rgba(150, 215, 255, 0.7);
+  box-shadow: 0 0 12px rgba(90, 210, 255, 0.3);
 }
 
 @media (max-width: 640px) {

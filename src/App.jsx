@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './index.css'
+import * as sfx from './sounds'
 
 const POKEAPI_BASE = 'https://pokeapi.co/api/v2/pokemon'
 
@@ -67,6 +68,7 @@ async function fetchPokemon(query) {
     description: flavorEntry
       ? flavorEntry.flavor_text.replace(/[\n\f\r]+/g, ' ').replace(/pokémon/gi, 'Pokémon')
       : 'No Pokédex data available for this entry.',
+    cry: pokemon.cries?.latest ?? pokemon.cries?.legacy ?? null,
     image:
       pokemon.sprites.other?.['official-artwork']?.front_default ??
       pokemon.sprites.front_default,
@@ -77,14 +79,36 @@ async function fetchPokemon(query) {
   }
 }
 
+function CryButton({ playing, disabled, name, onClick }) {
+  return (
+    <button
+      type="button"
+      className={`cry-btn${playing ? ' cry-playing' : ''}`}
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={`Play ${name} cry`}
+      title="Play cry"
+    >
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+        <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z" fill="currentColor" />
+        <path className="cry-wave cry-wave-1" d="M15 9.5a3.6 3.6 0 0 1 0 5" />
+        <path className="cry-wave cry-wave-2" d="M17.5 7a7 7 0 0 1 0 10" />
+      </svg>
+    </button>
+  )
+}
+
 function App() {
   const [phase, setPhase] = useState(PHASE.CLOSED)
   const [pokemon, setPokemon] = useState(null)
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState('idle')
   const [showLegend, setShowLegend] = useState(false)
+  const [cryPlaying, setCryPlaying] = useState(false)
+  const [nextLoading, setNextLoading] = useState(false)
   const requestId = useRef(0)
   const timersRef = useRef([])
+  const cryRef = useRef(null)
 
   const runSequence = (steps) => {
     timersRef.current.forEach(clearTimeout)
@@ -100,6 +124,8 @@ function App() {
   }
 
   const closePokedex = () => {
+    requestId.current++
+    setNextLoading(false)
     runSequence([
       [() => setPhase(PHASE.FLASH), 0],
       [
@@ -133,9 +159,23 @@ function App() {
     }
   }
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault()
-    submitSearch()
+  // Move to the next Pokédex entry without closing the Pokédex.
+  const nextEntry = async () => {
+    if (phase !== PHASE.GLASS || !pokemon || nextLoading) return
+    sfx.button()
+    const id = ++requestId.current
+    setNextLoading(true)
+    const nextId = parseInt(pokemon.id, 10) + 1
+    try {
+      // Past the last entry there is no such ID, so wrap around to #1.
+      const data = await fetchPokemon(String(nextId)).catch(() => fetchPokemon('1'))
+      if (id !== requestId.current) return
+      setPokemon(data)
+    } catch {
+      // Network failure: stay on the current entry.
+    } finally {
+      if (id === requestId.current) setNextLoading(false)
+    }
   }
 
   const showShell = phase !== PHASE.GLASS
@@ -144,14 +184,34 @@ function App() {
   const searchLoading = phase === PHASE.CLOSED && status === 'loading'
   const lensState = phase === PHASE.CLOSED ? status : 'idle'
 
+  const pressSearch = () => {
+    if (!controlsActive) return
+    sfx.button()
+    submitSearch()
+  }
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault()
+    pressSearch()
+  }
+
+  const handleQueryChange = (e) => {
+    const next = e.target.value.slice(0, 12)
+    if (next !== query) sfx.type(next.length < query.length)
+    setQuery(next)
+    setStatus('idle')
+  }
+
   const resetSearch = () => {
     if (!controlsActive) return
+    sfx.button()
     setQuery('')
     setStatus('idle')
   }
 
   const adjustId = (delta) => {
     if (!controlsActive) return
+    sfx.dpad(delta > 0)
     setQuery((prev) => {
       const n = parseInt(prev.trim(), 10)
       const current = Number.isFinite(n) ? n : 0
@@ -159,6 +219,73 @@ function App() {
     })
     setStatus('idle')
   }
+
+  const playCry = useCallback(() => {
+    const audio = cryRef.current
+    if (!audio) return
+    audio.currentTime = 0
+    audio.play().catch(() => {})
+  }, [])
+
+  // Browsers only allow audio after a user gesture; unlock on the first one.
+  useEffect(() => {
+    const unlock = () => sfx.unlock()
+    window.addEventListener('pointerdown', unlock, { once: true })
+    window.addEventListener('keydown', unlock, { once: true })
+    return () => {
+      window.removeEventListener('pointerdown', unlock)
+      window.removeEventListener('keydown', unlock)
+    }
+  }, [])
+
+  // Load (and preload) the searched Pokémon's cry.
+  useEffect(() => {
+    if (!pokemon?.cry) {
+      cryRef.current = null
+      return
+    }
+    const audio = new Audio(pokemon.cry)
+    audio.preload = 'auto'
+    audio.volume = 0.7
+    const onPlay = () => setCryPlaying(true)
+    const onStop = () => setCryPlaying(false)
+    audio.addEventListener('play', onPlay)
+    audio.addEventListener('pause', onStop)
+    audio.addEventListener('ended', onStop)
+    cryRef.current = audio
+    return () => {
+      audio.pause()
+      audio.removeEventListener('play', onPlay)
+      audio.removeEventListener('pause', onStop)
+      audio.removeEventListener('ended', onStop)
+      if (cryRef.current === audio) cryRef.current = null
+    }
+  }, [pokemon])
+
+  // Once the Pokédex is revealed (or moves to a new entry), the Pokémon cries out.
+  useEffect(() => {
+    if (phase !== PHASE.GLASS) return
+    playCry()
+    return () => cryRef.current?.pause()
+  }, [phase, pokemon, playCry])
+
+  // Door slide / white burst swoosh.
+  useEffect(() => {
+    if (phase === PHASE.OPENING) sfx.doorsOpen()
+    else if (phase === PHASE.FLASH) sfx.burst()
+  }, [phase])
+
+  // Scanning sound while the lens glows blue.
+  useEffect(() => {
+    if (!searchLoading) return
+    return sfx.startScan()
+  }, [searchLoading])
+
+  // Error buzz lasts until the state changes.
+  useEffect(() => {
+    if (lensState !== 'error') return
+    return sfx.startBuzz()
+  }, [lensState])
 
   return (
     <div className="stage">
@@ -240,7 +367,7 @@ function App() {
                     <input
                       type="text"
                       value={query}
-                      onChange={(e) => setQuery(e.target.value.slice(0, 12))}
+                      onChange={handleQueryChange}
                       placeholder="Name or ID…"
                       autoComplete="off"
                       spellCheck="false"
@@ -295,7 +422,7 @@ function App() {
                   className={`btn-round btn-b btn-search${searchReady ? ' btn-search-ready' : ''}${
                     searchLoading ? ' btn-search-loading' : ''
                   }`}
-                  onClick={submitSearch}
+                  onClick={pressSearch}
                   disabled={!controlsActive}
                   aria-label="Search"
                 />
@@ -310,7 +437,7 @@ function App() {
       {phase === PHASE.FLASH && <div className="flash-burst" />}
 
       {phase === PHASE.GLASS && pokemon && (
-        <div className="glass-pokedex">
+        <div className="glass-pokedex" key={pokemon.id}>
           <div className="glass-panel left-panel">
             <div className="screen-frame">
               <img src={pokemon.image} alt={pokemon.name} className="pokemon-img" />
@@ -333,7 +460,15 @@ function App() {
 
           <div className="glass-panel right-panel">
             <header className="dex-header">
-              <h1>{pokemon.name}</h1>
+              <div className="dex-title-row">
+                <h1>{pokemon.name}</h1>
+                <CryButton
+                  playing={cryPlaying}
+                  disabled={!pokemon.cry}
+                  name={pokemon.name}
+                  onClick={playCry}
+                />
+              </div>
               <span className="category">{pokemon.category}</span>
               <div className="types">
                 {pokemon.types.map((type) => (
@@ -387,9 +522,14 @@ function App() {
               ))}
             </div>
 
-            <button className="rescan-btn" onClick={closePokedex}>
-              ⟳ Rescan
-            </button>
+            <div className="dex-actions">
+              <button className="rescan-btn" onClick={closePokedex}>
+                Rescan
+              </button>
+              <button className="rescan-btn next-btn" onClick={nextEntry} disabled={nextLoading}>
+                {nextLoading ? 'Scanning…' : 'Next'}
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -182,16 +182,20 @@ function App() {
         <div className="legend-panel">
           <h2>Controls</h2>
           <div className="legend-row">
+            <span className="legend-dot legend-dot-screen" />
+            <span>Input area</span>
+          </div>
+          <div className="legend-row">
             <span className="legend-dot legend-dot-blue" />
-            <span>Search the typed name or ID</span>
+            <span>Search</span>
           </div>
           <div className="legend-row">
             <span className="legend-dot legend-dot-yellow" />
-            <span>Reset the search field</span>
+            <span>Reset</span>
           </div>
           <div className="legend-row">
-            <span className="legend-dot legend-dot-cross">+</span>
-            <span>+1 / −1 the Pokédex ID</span>
+            <span className="legend-dot legend-dot-cross" />
+            <span>+1 / −1 Pokédex ID</span>
           </div>
         </div>
       )}
@@ -228,6 +232,25 @@ function App() {
               </div>
               <div className="screw screw-tl" />
               <div className="screw screw-bl" />
+
+              <form className="search-overlay" onSubmit={handleFormSubmit}>
+                <div className="search-row">
+                  <div className="search-glass">
+                    <span className="search-scan" />
+                    <input
+                      type="text"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value.slice(0, 12))}
+                      placeholder="Name or ID…"
+                      autoComplete="off"
+                      spellCheck="false"
+                      maxLength={12}
+                      disabled={!controlsActive}
+                      autoFocus
+                    />
+                  </div>
+                </div>
+              </form>
             </div>
 
             <div className="pokedex-door door-right">
@@ -281,23 +304,6 @@ function App() {
               <div className="screw screw-br" />
             </div>
           </div>
-
-          {phase === PHASE.CLOSED && (
-            <form className="search-overlay" onSubmit={handleFormSubmit}>
-              <div className="search-row">
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Type a name or ID, press the ● button…"
-                  autoComplete="off"
-                  spellCheck="false"
-                  disabled={status === 'loading'}
-                  autoFocus
-                />
-              </div>
-            </form>
-          )}
         </div>
       )}
 

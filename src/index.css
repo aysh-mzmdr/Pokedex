@@ -194,13 +194,64 @@ body {
 }
 
 .legend-dot-cross {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.legend-dot-cross::before,
+.legend-dot-cross::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: linear-gradient(160deg, #2b2b2b, #0a0a0a);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  border-radius: 2px;
+  transform: translate(-50%, -50%);
+}
+
+.legend-dot-cross::before {
+  width: 16px;
+  height: 6px;
+}
+
+.legend-dot-cross::after {
+  width: 6px;
+  height: 16px;
+}
+
+.legend-dot-screen {
+  position: relative;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.legend-dot-screen::before,
+.legend-dot-screen::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.legend-dot-screen::before {
+  width: 16px;
+  height: 10px;
+  border-radius: 3px;
   background: #1a1a1a;
-  color: #fff;
-  font-size: 0.68rem;
-  font-weight: 700;
+  border: 1px solid #0f0f0f;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+.legend-dot-screen::after {
+  width: 12px;
+  height: 6px;
+  border-radius: 2px;
+  background: linear-gradient(160deg, #bfe9ff 0%, #57c2f5 45%, #0b6fb0 100%);
 }
 
 /* ---------- physical pokedex shell ---------- */
@@ -737,26 +788,6 @@ body {
   filter: grayscale(0.5) brightness(0.8);
 }
 
-.btn-search-ready {
-  animation: btnReadyPulse 1.4s ease-in-out infinite;
-}
-
-@keyframes btnReadyPulse {
-  0%,
-  100% {
-    box-shadow:
-      inset 0 -2px 3px rgba(0, 0, 0, 0.4),
-      0 2px 3px rgba(0, 0, 0, 0.5),
-      0 0 0 0 rgba(111, 224, 255, 0.6);
-  }
-  50% {
-    box-shadow:
-      inset 0 -2px 3px rgba(0, 0, 0, 0.4),
-      0 2px 3px rgba(0, 0, 0, 0.5),
-      0 0 6px 3px rgba(111, 224, 255, 0.6);
-  }
-}
-
 .btn-search-loading {
   animation: btnLoadingSpin 0.9s linear infinite;
 }
@@ -797,31 +828,12 @@ body {
 
 .search-overlay {
   position: absolute;
-  top: 70.5%;
+  top: 70%;
   left: 50%;
   z-index: 5;
-  width: min(270px, 72vw);
+  width: min(130px, 68%);
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 9px;
-  background: linear-gradient(160deg, #c22323, #971414 55%, #7d0f0f);
-  border-radius: 18px;
-  border: 1px solid #6b0b0b;
-  box-shadow:
-    inset 0 2px 3px rgba(255, 255, 255, 0.25),
-    inset 0 -6px 10px rgba(0, 0, 0, 0.4),
-    0 6px 16px rgba(0, 0, 0, 0.45);
   animation: searchIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  transition: box-shadow 0.25s ease;
-}
-
-.search-overlay:focus-within {
-  box-shadow:
-    inset 0 2px 3px rgba(255, 255, 255, 0.25),
-    inset 0 -6px 10px rgba(0, 0, 0, 0.4),
-    0 6px 16px rgba(0, 0, 0, 0.45),
-    0 0 0 3px rgba(111, 224, 255, 0.45);
 }
 
 @keyframes searchIn {
@@ -837,28 +849,64 @@ body {
 
 .search-overlay .search-row {
   display: flex;
-  background: #12181a;
-  border-radius: 999px;
-  border: 2px solid #0a0d0e;
-  padding: 4px 14px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.85);
+  width: 100%;
+  height: 40px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  /*border: 1px solid #0f0f0f;*/
+  padding: 4px;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+.search-glass {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  background: linear-gradient(160deg, #bfe9ff 0%, #57c2f5 45%, #0b6fb0 100%);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.search-scan {
+  position: absolute;
+  top: 0;
+  left: -35%;
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6) 50%, transparent);
+  animation: scanAcross 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes scanAcross {
+  0% {
+    left: -35%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 .search-overlay input {
+  position: relative;
+  z-index: 1;
   flex: 1;
   min-width: 0;
+  width: 100%;
   background: transparent;
   border: none;
   outline: none;
-  color: #bdf6ff;
+  color: #06263d;
   font-family: 'Consolas', 'SFMono-Regular', monospace;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   letter-spacing: 0.3px;
-  padding: 7px 0;
+  padding: 5px 6px;
+  text-align: center;
 }
 
 .search-overlay input::placeholder {
-  color: rgba(189, 246, 255, 0.35);
+  color: rgba(6, 38, 61, 0.45);
 }
 
 .search-overlay input:disabled {

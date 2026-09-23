@@ -19,7 +19,6 @@ The app is a single-page React application that pulls live data from [PokéAPI](
 | Styling | Hand-written **CSS3**: 3D transforms, keyframe animations, `backdrop-filter` glassmorphism, gradients |
 | Audio | **Web Audio API** for synthesized SFX, `HTMLAudioElement` for Pokémon cries |
 | Data | **PokéAPI** REST endpoints (`/pokemon` and `/pokemon-species`) |
-| Linting | **ESLint 9** (flat config) with `react-hooks` and `react-refresh` plugins |
 | Hosting / CI | **GitHub Pages**, deployed with the `gh-pages` package |
 
 No UI component libraries, no animation libraries, no audio assets. Everything visual and audible is built from scratch.

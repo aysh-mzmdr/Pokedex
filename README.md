@@ -6,7 +6,7 @@ An interactive, animated Pokédex built with React. Type a Pokémon's name or Na
 
 ---
 
-## What the project is
+## Project Summary
 
 The app is a single-page React application that pulls live data from [PokéAPI](https://pokeapi.co/). It's designed to feel like a physical gadget rather than a search form. The whole UI is a Pokédex shell drawn entirely in CSS (lens, indicator lights, speaker grille, D-pad, A/B buttons, screws and hinges), and you operate it with those controls. Every interaction has a matching sound effect synthesized in real time with the Web Audio API. The app ships no audio files of its own; the only recorded sounds are the official Pokémon cries streamed from PokéAPI.
 
